@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Options Event-Risk Calendar: examples & sample output</title>
+<meta name="description" content="Examples for the Options Event-Risk Calendar on Apify: CPI, jobs, FOMC, GDP, PCE, Treasury auctions, opex and NYSE holidays mapped to your option expirations, from official sources.">
+<style>body{font-family:system-ui,sans-serif;max-width:860px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#222}pre{background:#f4f4f6;padding:1rem;overflow:auto;border-radius:6px}a.btn{display:inline-block;background:#1f6feb;color:#fff;padding:.6rem 1rem;border-radius:6px;text-decoration:none}table{border-collapse:collapse;width:100%;font-size:.92rem}td,th{border:1px solid #ddd;padding:.35rem .5rem;text-align:left}th{background:#f4f4f6}.note{background:#fff8e1;border-left:4px solid #f0b400;padding:.6rem 1rem}</style></head><body>
+<h1>Options Event-Risk Calendar: examples</h1>
+<p>Which scheduled market-moving events land before your option expires? Enter expiration dates (or "next N monthly expirations") and get one row per event: CPI, jobs report, PPI, GDP, PCE, retail sales, FOMC, Treasury auctions, plus rule-computed opex, VIX settlement and NYSE holidays. Each row has the time in ET, an impact tier, days and trading days before expiration, and the official source link. Data comes only from BLS, BEA, Census, the Federal Reserve and the U.S. Treasury.</p>
+<p><a class="btn" href="https://apify.com/xprm-llc/options-event-risk-calendar">Open on Apify Store</a></p>
+<p class="note"><strong>Educational, not advice.</strong> This is a scheduling tool for education and research, not investment, trading or tax advice. Agencies can reschedule releases and exchanges can close unexpectedly. Always confirm critical dates on the official source linked in each row. No consensus forecasts are included.</p>
+<h2>Example 1: high-impact events before the Nov 20, 2026 monthly</h2>
+<pre>{ "expirations": ["2026-11-20"], "minImpact": "high", "ticker": "SPY" }</pre>
+<p>Real output from a live run on October 17, 2026 (6 rows):</p>
+<table><tr><th>When (ET)</th><th>Event</th><th>Agency</th><th>Impact</th><th>Days / trading days before exp</th><th>Source</th></tr><tr><td>2026-10-28 14:00</td><td>FOMC rate decision & statement <small>(FOMC meeting October 27-28, 2026)</small></td><td>Federal Reserve</td><td>high</td><td>23 / 17</td><td><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm">link</a></td></tr><tr><td>2026-10-29 08:30</td><td>GDP (Advance Estimate) <small>(3rd Quarter 2026)</small></td><td>BEA</td><td>high</td><td>22 / 16</td><td><a href="https://www.bea.gov/news/schedule/ics/online-calendar-subscription.ics">link</a></td></tr><tr><td>2026-10-29 08:30</td><td>Personal Income and Outlays <small>(September 2026)</small></td><td>BEA</td><td>high</td><td>22 / 16</td><td><a href="https://www.bea.gov/news/schedule/ics/online-calendar-subscription.ics">link</a></td></tr><tr><td>2026-11-06 08:30</td><td>Employment Situation</td><td>BLS</td><td>high</td><td>14 / 10</td><td><a href="https://www.bls.gov/schedule/news_release/bls.ics">link</a></td></tr><tr><td>2026-11-10 08:30</td><td>Consumer Price Index</td><td>BLS</td><td>high</td><td>10 / 8</td><td><a href="https://www.bls.gov/schedule/news_release/bls.ics">link</a></td></tr><tr><td>2026-11-17 08:30</td><td>Advance Monthly Sales for Retail and Food Services <small>(October 2026)</small></td><td>Census</td><td>high</td><td>3 / 3</td><td><a href="https://www.census.gov/economic-indicators/calendar-listview-2026.html">link</a></td></tr></table>
+<h2>Example 2: market calendar, Nov 23 to Dec 31, 2026</h2>
+<pre>{ "nextMonthlyExpirations": 0, "fromDate": "2026-11-23", "toDate": "2026-12-31", "eventTypes": ["market-calendar", "opex"], "minImpact": "low" }</pre>
+<p>Real output from the same day (computed by rule):</p>
+<table><tr><th>When (ET)</th><th>Event</th><th>Agency</th><th>Impact</th><th>Source</th></tr><tr><td>2026-11-26 (all day)</td><td>NYSE closed: Thanksgiving Day</td><td>Market rule (computed)</td><td>medium</td><td><a href="https://www.nyse.com/markets/hours-calendars">link</a></td></tr><tr><td>2026-11-27 13:00</td><td>NYSE Early close (1:00 PM ET) day after Thanksgiving</td><td>Market rule (computed)</td><td>low</td><td><a href="https://www.nyse.com/markets/hours-calendars">link</a></td></tr><tr><td>2026-12-16 09:30</td><td>VIX futures &amp; options settlement (Wednesday)</td><td>Market rule (computed)</td><td>medium</td><td><a href="https://www.cboe.com/tradable_products/vix/vix_futures/specifications/">link</a></td></tr><tr><td>2026-12-18 09:30</td><td>Quarterly options &amp; futures expiration (quad witching)</td><td>Market rule (computed)</td><td>high</td><td><a href="https://www.theocc.com/company-information/documents-and-archives/options-calendar">link</a></td></tr><tr><td>2026-12-24 13:00</td><td>NYSE Early close (1:00 PM ET) Christmas Eve</td><td>Market rule (computed)</td><td>low</td><td><a href="https://www.nyse.com/markets/hours-calendars">link</a></td></tr><tr><td>2026-12-25 (all day)</td><td>NYSE closed: Christmas Day</td><td>Market rule (computed)</td><td>medium</td><td><a href="https://www.nyse.com/markets/hours-calendars">link</a></td></tr></table>
+<h2>Example 3: daily alerts for new or moved dates</h2>
+<pre>{ "nextMonthlyExpirations": 3, "minImpact": "high", "alertMode": true, "stateStoreName": "my-macro-alerts", "windowMode": "sincePreviousExpiration" }</pre>
+<p>Schedule it daily. The first run returns everything as <code>new</code>. Later runs return only events that are new or whose date or time <code>moved</code>, with the previous time. In our live test the rerun returned 0 rows.</p>
+<h2>Sample output row (JSON)</h2>
+<pre>{
+  &quot;event&quot;: &quot;Consumer Price Index&quot;,
+  &quot;category&quot;: &quot;inflation&quot;,
+  &quot;impact&quot;: &quot;high&quot;,
+  &quot;agency&quot;: &quot;BLS&quot;,
+  &quot;datetimeET&quot;: &quot;2026-11-10T08:30:00-05:00&quot;,
+  &quot;dateET&quot;: &quot;2026-11-10&quot;,
+  &quot;timeET&quot;: &quot;08:30&quot;,
+  &quot;allDay&quot;: false,
+  &quot;timeConfirmed&quot;: true,
+  &quot;referencePeriod&quot;: null,
+  &quot;notes&quot;: null,
+  &quot;expiration&quot;: &quot;2026-11-20&quot;,
+  &quot;daysBeforeExpiration&quot;: 10,
+  &quot;tradingDaysBeforeExpiration&quot;: 8,
+  &quot;ticker&quot;: &quot;SPY&quot;,
+  &quot;sourceUrl&quot;: &quot;https://www.bls.gov/schedule/news_release/bls.ics&quot;,
+  &quot;infoUrl&quot;: &quot;https://www.bls.gov/schedule/news_release/&quot;,
+  &quot;fetchedAt&quot;: &quot;2026-10-17T13:48:17.561Z&quot;,
+  &quot;changed&quot;: null,
+  &quot;changeStatus&quot;: null,
+  &quot;previousDatetimeET&quot;: null,
+  &quot;eventId&quot;: &quot;BLS|c26d524f-228b-46e9-b00e-fdbec26d68af&quot;
+}</pre>
+<h2>Pricing</h2>
+<p>Pay per event: $0.003 per event row plus $0.00001 per run start. Example 1 costs about $0.02. Invalid input and failed sources write no rows and cost nothing.</p>
+<h2>Use with AI agents</h2>
+<p>Add <code>xprm-llc/options-event-risk-calendar</code> as a tool in the <a href="https://mcp.apify.com">Apify MCP server</a>, then ask "List high-impact U.S. macro events before my Dec 18 SPX expiration." Pairs with the <a href="https://apify.com/xprm-llc/options-strategy-calculator">Options Strategy Calculator</a>.</p>
+<p><a class="btn" href="https://apify.com/xprm-llc/options-event-risk-calendar">Run it on Apify</a></p>
+<p><small>Sources: BLS, BEA, Census Bureau, Federal Reserve Board, U.S. Treasury (TreasuryDirect, Fiscal Data). Not affiliated with or endorsed by any agency.</small></p>
+</body></html>
